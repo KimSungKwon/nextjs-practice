@@ -17,7 +17,7 @@ describe('ArticleCard', () => {
     });
 
     // 컴포넌트를 렌더링하고, 게시글body의 요약본을 만들고, 컴포넌트의 body와 일치하는지 검사
-    test('Generated summary should not exceed 100 characters', async () => {
+    test('Generated summary should not exceed 100 characters.', async () => {
         render(<ArticleCard {...article} />);
         const summary = screen.getByText(cutTextToLength(article.body, 100));
         expect(summary).toBeDefined();
