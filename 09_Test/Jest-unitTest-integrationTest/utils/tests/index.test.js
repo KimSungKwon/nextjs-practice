@@ -4,7 +4,7 @@ import { cutTextToLength, slugify, composeArticleSlug, extractArticleIdFromSlug 
     jest 내장함수: describe, test, expect
     describe: 테스트와 관련된 그룹을 만듬. 동일한 함수에 대한 다른 테스트나 모듈 등을 해당 함수 내에 포함시킴
     test: 테스트를 선언하고 실행
-    expact: 함수의 출력과 예상한 결과를 비교
+    expact: 함수의 출력과 예상한 결과를 비교 
 */
 describe("cut TextToLength and add ...", () => {
 
