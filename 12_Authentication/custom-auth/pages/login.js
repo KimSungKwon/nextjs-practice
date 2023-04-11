@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 import styles from '../styles/app.module.css';
 
 async function handleLogin(email, password) {
@@ -24,6 +24,7 @@ async function handleLogin(email, password) {
 }
 
 export default function Home() {
+    const router = useRouter();
     const [loginError, setLoginError] = useState(null);
 
     const handleSubmit = (event) => {
