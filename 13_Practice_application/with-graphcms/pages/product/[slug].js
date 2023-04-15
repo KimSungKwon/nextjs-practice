@@ -1,3 +1,5 @@
+import { useContext, useState } from "react";
+import CartContext from "@/lib/context/Cart";
 import { Box, Flex, Grid, Text, Image, Divider, Button, Select } from "@chakra-ui/react";
 import graphql from "@/lib/graphql";
 import getAllProducts from "@/lib/graphql/queries/getAllProducts";
@@ -35,7 +37,7 @@ export async function getStaticProps({ params }) {
 function SelectQuantity(props) {
     const quantity = [...Array.from({ length: 10 })];
     return (
-        <Select placeholder="Quantity">
+        <Select placeholder="Quantity" onChange={(event) => props.onChange(event.target.value)}>
             {quantity.map((_, i) => (
                 <option key={i + 1} value={i + 1}>
                     {i + 1}
@@ -46,6 +48,18 @@ function SelectQuantity(props) {
 }
 
 export default function ProductPage(props) { // == ProductPage({ product }) {}
+    const [quantity, setQuantity] = useState(0);
+    const { items, setItems } = useContext(CartContext);
+    
+    const alreadyInCart = props.product.id in items; // 바구니에 이미 있는 아이템 id
+
+    function addToCart() {
+        setItems({
+            ...items,
+            [props.product.id]: quantity,
+        });
+    }
+
     return (
         <Flex rounded="xl" boxShadow="2xl" w="full" p="16" bgColor="white">
             <Image height="96" width="96" src={props.product.images[0].url} />
@@ -61,9 +75,9 @@ export default function ProductPage(props) { // == ProductPage({ product }) {}
                 </Text>
                 <Divider my="6" />
                 <Grid gridTemplateColumns="2fr 1fr" gap="5" alignItems="center">
-                    <SelectQuantity onChange={() => {}} />
-                    <Button colorScheme="blue">
-                        Add to cart
+                    <SelectQuantity onChange={(quantity) => setQuantity(parseInt(quantity))} />
+                    <Button colorScheme="blue" onClick={addToCart}>
+                        {alreadyInCart ? 'Update' : 'Add to cart'}
                     </Button>
                 </Grid>
             </Box>
