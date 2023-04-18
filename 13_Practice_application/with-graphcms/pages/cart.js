@@ -4,6 +4,7 @@ import CartContext from "@/lib/context/Cart";
 import getProductById from "@/lib/graphql/queries/getProductById";
 import graphql from "@/lib/graphql";
 import Link from "next/link";
+import loadStripe from '../lib/stripe';
 
 export default function Cart() {
     const { items } = useContext(CartContext);
@@ -24,6 +25,24 @@ export default function Cart() {
             })
             .catch((err) => console.error(err));
     }, [JSON.stringify(products)]);
+
+    async function handlePayment() {
+        const stripe = await loadStripe();
+        const res = await fetch('/api/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                items,
+            }),
+        });
+
+        const { session } = await res.json();
+        await stripe.redirectToCheckout({
+            sessionId: session.id,
+        });
+    };
 
     // 장바구니에 담은 제품들의 최종 가격 계산
     function getTotal() {
@@ -74,7 +93,7 @@ export default function Cart() {
                             <Text fontSize="xl" fontWeight="bold">
                                 Total: ${getTotal()}
                             </Text>
-                            <Button colorScheme="blue">Pay now</Button>
+                            <Button colorScheme="blue" onClick={handlePayment}>Pay now</Button>
                         </Flex>
                     </>
                 )}
